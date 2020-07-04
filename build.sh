@@ -66,10 +66,23 @@ popd
 
 rm -rf "${OUTPUT}/*"
 
-# OpenAL-soft is copied from the debian binary package
-# TODO: Work out the correct set of dependencies / build args to produce
-# a working library when compiled from source here!
-cp /usr/lib/x86_64-linux-gnu/libopenal.so.1 "${OUTPUT}/usr/lib/libopenal.so.1"
+# OpenAL-soft is compiled from source
+curl -sLO https://www.openal-soft.org/openal-releases/openal-soft-1.20.1.tar.bz2
+tar xf openal-soft-1.20.1.tar.bz2
+mkdir -p openal-soft-1.20.1/build
+pushd openal-soft-1.20.1/build
+cmake .. \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DALSOFT_CONFIG=OFF \
+  -DALSOFT_DLOPEN=OFF \
+  -DCMAKE_INSTALL_LIBDIR:PATH="${OUTPUT}/usr/lib/" \
+  -DCMAKE_INSTALL_PREFIX:PATH="${OUTPUT}/usr/" \
+  -Wno-dev
+make
+make install
+rm -rf ${OUTPUT}/usr/share/openal
+rm -rf ${OUTPUT}/usr/include
+popd
 
 # SDL2 is compiled from source
 curl -sLO http://www.libsdl.org/release/SDL2-2.0.8.tar.gz

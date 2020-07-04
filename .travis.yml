@@ -3,7 +3,10 @@ dist: trusty
 addons:
   apt:
     packages:
-      - libopenal1
+      - cmake
+      - libasound2-dev
+      - libpulse-dev
+      - zlib1g-dev
       - libncurses-dev
       - libreadline-dev
       - libgl1-mesa-dev
